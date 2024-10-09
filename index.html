@@ -6,137 +6,147 @@
     <title>3D Sematrica Jap.</title>
 
     <style>
-    body {
+        body {
             margin: 0;
             overflow: hidden;
             font-family: Arial, sans-serif;
-            color: black; /* Change text color to black */
-            background-color: white; /* Set background color to white */
-    }
-
-    #dateTime, #planetDateTime, #timer {
-        position: absolute;
-        left: 10px;
-        font-size: 10px;
-        color: white;
-        z-index: 10;
-    }
-
-    #dateTime {
-        top: 10px;
-    }
-
-    #planetDateTime {
-        top: 50px;
-    }
-
-    #timer {
-        top: 400px;
-    }
-
-    #dropdown, #behaviorDropdown, .input-field {
-        background-color: black;
-        color: white;
-        border: 1px solid white;
-    }
-
-    #dropdown, #behaviorDropdown {
-        position: absolute;
-        top: 100px;
-        left: 10px;
-        z-index: 10;
-    }
-
-    #behaviorDropdown {
-        top: 140px;
-    }
-
-    .input-field {
-        position: absolute;
-        left: 10px;
-        font-size: 12px;
-        z-index: 10;
-    }
-
-    #particleCountInput {
-        top: 180px;
-    }
-
-    #colorInputRed {
-        top: 220px;
-    }
-
-    #colorInputBlue {
-        top: 260px;
-    }
-
-    #colorInputGreen {
-        top: 300px;
-    }
-
-    #colorInputYellow {
-        top: 340px;
-    }
-
-    #colorInputPurple {
-        top: 380px;
-    }
-
-    #colorInputCyan {
-        top: 420px;
-    }
-
-    #compileButton, #pyramidButton, #separateColorsButton {
-        position: absolute;
-        left: 10px;
-        z-index: 10;
-        font-size: 7px;
-        padding: 10px;
-        cursor: pointer;
-    }
-
-    #compileButton {
-        top: 460px;
-    }
-
-    #pyramidButton {
-        top: 520px;
-    }
-
-    #separateColorsButton {
-        top: 580px;
-    }
-
-    #errorMessage {
-        position: absolute;
-        top: 640px;
-        left: 10px;
-        color: red;
-        font-size: 16px;
-        z-index: 10;
-    }
-
-    /* Pulse animation */
-    @keyframes pulse {
-        0% {
-            transform: scale(1);
+            color: white;
         }
-        50% {
-            transform: scale(1.05);
-        }
-        100% {
-            transform: scale(1);
-        }
-    }
-</style>
 
+        #dateTime, #planetDateTime, #timer {
+            position: absolute;
+            left: 10px;
+            font-size: 10px;
+            color: white;
+            z-index: 10;
+        }
+
+        #dateTime {
+            top: 10px;
+        }
+
+        #planetDateTime {
+            top: 50px;
+        }
+
+        #timer {
+            top: 400px;
+        }
+
+        #dropdown, #behaviorDropdown, .input-field {
+            background-color: black;
+            color: white;
+            border: 1px solid white;
+        }
+
+        #dropdown, #behaviorDropdown {
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            z-index: 10;
+        }
+
+        #behaviorDropdown {
+            top: 140px;
+        }
+
+        .input-field {
+            position: absolute;
+            left: 10px;
+            font-size: 12px;
+            z-index: 10;
+        }
+
+        #particleCountInput {
+            top: 180px;
+        }
+
+        #colorInputRed {
+            top: 220px;
+        }
+
+        #colorInputBlue {
+            top: 260px;
+        }
+
+        #colorInputGreen {
+            top: 300px;
+        }
+
+        #colorInputYellow {
+            top: 340px;
+        }
+
+        #colorInputCyan {
+            top: 380px;
+        }
+
+        #colorInputMagenta {
+            top: 420px;
+        }
+
+        #colorInputOrange {
+            top: 460px;
+        }
+
+        #colorInputPurple {
+            top: 500px;
+        }
+
+        #colorInputPink {
+            top: 540px;
+        }
+
+        #compileButton, #pyramidButton, #separateColorsButton {
+            position: absolute;
+            left: 10px;
+            z-index: 10;
+            font-size: 7px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #compileButton {
+            top: 600px;
+        }
+
+        #pyramidButton {
+            top: 660px;
+        }
+
+        #separateColorsButton {
+            top: 720px;
+        }
+
+        #errorMessage {
+            position: absolute;
+            top: 780px;
+            left: 10px;
+            color: red;
+            font-size: 16px;
+            z-index: 10;
+        }
+
+        /* Pulse animation */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
 </head>
 <body>
 
 <!-- Divs for displaying current date, planet date, and timer -->
 <div id="dateTime"></div>
 <div id="planetDateTime"></div>
-<div id="timer">____________________________________________exeコードの実行 _ : 0.000s</div>
+<div id="timer">________________________________________________________________________________________________________->exeコードの実行 _ : 0.000s</div>
 
 <!-- Dropdown menu for selecting system options -->
 <select id="dropdown">
@@ -159,15 +169,22 @@
 <input id="colorInputBlue" class="input-field" type="color" value="#0000FF" title="Select Blue Particle Color">
 <input id="colorInputGreen" class="input-field" type="color" value="#00FF00" title="Select Green Particle Color">
 <input id="colorInputYellow" class="input-field" type="color" value="#FFFF00" title="Select Yellow Particle Color">
-<input id="colorInputPurple" class="input-field" type="color" value="#800080" title="Select Purple Particle Color">
 <input id="colorInputCyan" class="input-field" type="color" value="#00FFFF" title="Select Cyan Particle Color">
+<input id="colorInputMagenta" class="input-field" type="color" value="#FF00FF" title="Select Magenta Particle Color">
+<input id="colorInputOrange" class="input-field" type="color" value="#FFA500" title="Select Orange Particle Color">
+<input id="colorInputPurple" class="input-field" type="color" value="#800080" title="Select Purple Particle Color">
+<input id="colorInputPink" class="input-field" type="color" value="#FFC0CB" title="Select Pink Particle Color">
 
 <!-- Compile button -->
 <button id="compileButton">コンパイル  F-1</button>
 <!-- Pyramid button -->
 <button id="pyramidButton">フラットライン F-0</button>
 <!-- Separate Colors button -->
-<button id="separateColorsButton">Sep-Co</button>
+<button id="separateColorsButton">Separate Colors</button>
+
+<!-- Capture and Repeat buttons -->
+<button id="captureButton" style="position: absolute; top: 50px; left: 10px; z-index: 10; font-size: 7px; padding: 10px; cursor: pointer;">Capture</button>
+<button id="repeatButton" style="position: absolute; top: 220px; left: 10px; z-index: 10; font-size: 7px; padding: 10px; cursor: pointer;">Repeat</button>
 
 <!-- Error message placeholder -->
 <div id="errorMessage"></div>
@@ -183,12 +200,17 @@ let particleColors = [];
 let blackHoleSize = 50;
 let selectedOption = "";
 let selectedBehavior = "default";
+
+// Color values
 let particleColorRed = "#FF0000";
 let particleColorBlue = "#0000FF";
 let particleColorGreen = "#00FF00";
 let particleColorYellow = "#FFFF00";
-let particleColorPurple = "#800080";
 let particleColorCyan = "#00FFFF";
+let particleColorMagenta = "#FF00FF";
+let particleColorOrange = "#FFA500";
+let particleColorPurple = "#800080";
+let particleColorPink = "#FFC0CB";
 
 let pixR = window.devicePixelRatio ? window.devicePixelRatio : 1;
 let isDragging = false;
@@ -198,6 +220,7 @@ let mouseStart = { x: 0, y: 0 };
 let timerInterval;
 let startTime;
 let pyramidButtonClickCount = 0;
+let capturedPositions = null;  // Array to store captured positions
 
 function updateESTDateTime() {
     const estTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
@@ -216,6 +239,10 @@ function init() {
     document.getElementById('pyramidButton').addEventListener('click', createPyramid);
     document.getElementById('separateColorsButton').addEventListener('click', separateColors);
 
+    // Event listeners for the Capture and Repeat buttons
+    document.getElementById('captureButton').addEventListener('click', captureParticles);
+    document.getElementById('repeatButton').addEventListener('click', repeatParticles);
+
     document.getElementById('dropdown').addEventListener('change', toggleBehaviorDropdown);
     document.addEventListener('mousedown', onMouseDown, false);
     document.addEventListener('mousemove', onMouseMove, false);
@@ -231,6 +258,16 @@ function setupScene() {
 
     scene = new t.Scene();
 
+    // Load the texture
+    const loader = new t.TextureLoader();
+    loader.load('https://images-assets.nasa.gov/image/PIA22946/PIA22946~orig.jpg', function(texture) {
+        const geometry = new t.PlaneGeometry(30, 30);
+        const material = new t.MeshBasicMaterial({ map: texture });
+        const plane = new t.Mesh(geometry, material);
+
+        plane.position.set(0, 0, -500);
+        scene.add(plane);
+    });
 
     renderer = new t.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(pixR);
@@ -241,87 +278,6 @@ function setupScene() {
     scene.add(world);
 
     createGrid();
-}
-
-function createLogInButton() {
-    // Remove existing button if present
-    let existingButton = document.getElementById('logInButton');
-    if (existingButton) {
-        existingButton.remove();
-    }
-
-    // Create new login button
-    let logInButton = document.createElement('button');
-    logInButton.id = 'logInButton';
-    logInButton.textContent = 'て';
-
-    // Style the button to be perfectly round
-    logInButton.style.position = 'absolute';
-    logInButton.style.zIndex = '1';
-    logInButton.style.width = '30px'; // Equal width and height
-    logInButton.style.height = '30px'; // Equal width and height
-    logInButton.style.borderRadius = '50%'; // Make it a perfect circle
-    logInButton.style.backgroundColor = 'black'; // Background color
-    logInButton.style.color = 'black'; // Text color
-    logInButton.style.fontSize = '10px'; // Font size
-    logInButton.style.border = 'none'; // Remove border
-    logInButton.style.cursor = 'pointer'; // Pointer on hover
-    logInButton.style.boxShadow = '0 8px 16px rgba(255, 75, 92, 0.5)'; // Shadow
-
-    // Glow effect
-    logInButton.style.boxShadow = '0 0 20px rgba(255, 75, 92, 0.8), 0 0 30px rgba(255, 75, 92, 0.4)';
-
-    // Pulse animation
-    logInButton.style.animation = 'pulse 3s infinite';
-
-    // Add hover effects for scaling and color change
-    logInButton.addEventListener('mouseover', () => {
-        logInButton.style.transform = 'scale(1.1)';
-        logInButton.style.backgroundColor = '#ff4b5c'; // Background color on hover
-    });
-    logInButton.addEventListener('mouseout', () => {
-        logInButton.style.transform = 'scale(1)';
-        logInButton.style.backgroundColor = 'black'; // Restore original background
-    });
-
-    // Append button to the body
-    document.body.appendChild(logInButton);
-
-    // Position the button in the middle of the screen
-    logInButton.style.left = `${window.innerWidth / 2 - 50}px`;
-    logInButton.style.top = `${window.innerHeight / 2 - 50}px`;
-
-    // Action when button is clicked
-    logInButton.addEventListener('click', () => {
-        moveParticlesToButton(logInButton);
-    });
-}
-
-function moveParticlesToButton(logInButton) {
-    const rect = logInButton.getBoundingClientRect();
-    const targetPosition = new t.Vector3(
-        (rect.left + rect.width / 2) / window.innerWidth * 2 - 1,
-        -(rect.top + rect.height / 2) / window.innerHeight * 2 + 1,
-        0
-    );
-    targetPosition.unproject(camera);
-
-    const positions = particleSystem.geometry.attributes.position.array;
-    const velocities = particleSystem.geometry.attributes.velocity.array;
-
-    for (let i = 0; i < positions.length; i += 3) {
-        const dx = targetPosition.x - positions[i];
-        const dy = targetPosition.y - positions[i + 1];
-        const dz = targetPosition.z - positions[i + 2];
-        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-        // Move particles toward the button
-        velocities[i] = dx / distance * 0.1;
-        velocities[i + 1] = dy / distance * 0.1;
-        velocities[i + 2] = dz / distance * 0.1;
-    }
-
-    particleSystem.geometry.attributes.velocity.needsUpdate = true;
 }
 
 function handleCompile() {
@@ -341,12 +297,17 @@ function handleCompile() {
 
     selectedBehavior = document.getElementById('behaviorDropdown').value;
     particleCount = parseInt(document.getElementById('particleCountInput').value) || 1000000;
+
+    // Update particle colors from the input fields
     particleColorRed = document.getElementById('colorInputRed').value;
     particleColorBlue = document.getElementById('colorInputBlue').value;
     particleColorGreen = document.getElementById('colorInputGreen').value;
     particleColorYellow = document.getElementById('colorInputYellow').value;
-    particleColorPurple = document.getElementById('colorInputPurple').value;
     particleColorCyan = document.getElementById('colorInputCyan').value;
+    particleColorMagenta = document.getElementById('colorInputMagenta').value;
+    particleColorOrange = document.getElementById('colorInputOrange').value;
+    particleColorPurple = document.getElementById('colorInputPurple').value;
+    particleColorPink = document.getElementById('colorInputPink').value;
 
     clearWorld();
 
@@ -361,12 +322,6 @@ function handleCompile() {
     }
 
     createParticlesAroundBlackHoles();
-
-    // Create login button if certain conditions are met
-        if (selectedOption === 'Value3' && selectedBehavior === 'particlesBetweenBlackHoles' && particleCount === 99999 && seconds > 7) {
-        createLogInButton();
-         positionLogInButton(blackHoles[0]);
-    }
 }
 
 function toggleBehaviorDropdown() {
@@ -382,7 +337,7 @@ function toggleBehaviorDropdown() {
 }
 
 function createGrid() {
-    const darkGreyColor = new t.Color(0x2f2f2f); // Dark grey color
+    const darkGreyColor = new t.Color(0x2f2f2f);
 
     const gridMaterial = new t.LineBasicMaterial({
         color: darkGreyColor,
@@ -427,12 +382,16 @@ function createParticlesAroundBlackHoles() {
     const particleVelocities = new Float32Array(particleCount * 3);
     particleColors = new Float32Array(particleCount * 3);
 
+    // Convert hex to RGB for each color
     const [rRed, gRed, bRed] = hexToRgb(particleColorRed);
     const [rBlue, gBlue, bBlue] = hexToRgb(particleColorBlue);
     const [rGreen, gGreen, bGreen] = hexToRgb(particleColorGreen);
     const [rYellow, gYellow, bYellow] = hexToRgb(particleColorYellow);
-    const [rPurple, gPurple, bPurple] = hexToRgb(particleColorPurple);
     const [rCyan, gCyan, bCyan] = hexToRgb(particleColorCyan);
+    const [rMagenta, gMagenta, bMagenta] = hexToRgb(particleColorMagenta);
+    const [rOrange, gOrange, bOrange] = hexToRgb(particleColorOrange);
+    const [rPurple, gPurple, bPurple] = hexToRgb(particleColorPurple);
+    const [rPink, gPink, bPink] = hexToRgb(particleColorPink);
 
     for (let i = 0; i < particleCount; i++) {
         const x = Math.random() * 600 - 300;
@@ -447,35 +406,48 @@ function createParticlesAroundBlackHoles() {
         particleVelocities[i * 3 + 1] = 0;
         particleVelocities[i * 3 + 2] = 0;
 
-        if (i < particleCount / 6) {
+        // Assign colors to particles
+        if (i < particleCount / 9) {
             particleColors[i * 3] = rRed / 255;
             particleColors[i * 3 + 1] = gRed / 255;
             particleColors[i * 3 + 2] = bRed / 255;
-        } else if (i < (2 * particleCount) / 6) {
+        } else if (i < (2 * particleCount) / 9) {
             particleColors[i * 3] = rBlue / 255;
             particleColors[i * 3 + 1] = gBlue / 255;
             particleColors[i * 3 + 2] = bBlue / 255;
-        } else if (i < (3 * particleCount) / 6) {
+        } else if (i < (3 * particleCount) / 9) {
             particleColors[i * 3] = rGreen / 255;
             particleColors[i * 3 + 1] = gGreen / 255;
             particleColors[i * 3 + 2] = bGreen / 255;
-        } else if (i < (4 * particleCount) / 6) {
+        } else if (i < (4 * particleCount) / 9) {
             particleColors[i * 3] = rYellow / 255;
             particleColors[i * 3 + 1] = gYellow / 255;
             particleColors[i * 3 + 2] = bYellow / 255;
-        } else if (i < (5 * particleCount) / 6) {
+        } else if (i < (5 * particleCount) / 9) {
+            particleColors[i * 3] = rCyan / 255;
+            particleColors[i * 3 + 1] = gCyan / 255;
+            particleColors[i * 3 + 2] = bCyan / 255;
+        } else if (i < (6 * particleCount) / 9) {
+            particleColors[i * 3] = rMagenta / 255;
+            particleColors[i * 3 + 1] = gMagenta / 255;
+            particleColors[i * 3 + 2] = bMagenta / 255;
+        } else if (i < (7 * particleCount) / 9) {
+            particleColors[i * 3] = rOrange / 255;
+            particleColors[i * 3 + 1] = gOrange / 255;
+            particleColors[i * 3 + 2] = bOrange / 255;
+        } else if (i < (8 * particleCount) / 9) {
             particleColors[i * 3] = rPurple / 255;
             particleColors[i * 3 + 1] = gPurple / 255;
             particleColors[i * 3 + 2] = bPurple / 255;
         } else {
-            particleColors[i * 3] = rCyan / 255;
-            particleColors[i * 3 + 1] = gCyan / 255;
-            particleColors[i * 3 + 2] = bCyan / 255;
+            particleColors[i * 3] = rPink / 255;
+            particleColors[i * 3 + 1] = gPink / 255;
+            particleColors[i * 3 + 2] = bPink / 255;
         }
     }
 
         const particleMaterial = new t.PointsMaterial({
-    size: 0.0001,
+    size: 0.000000000001,
     vertexColors: true,
     transparent: true,
     opacity: 0.25,
@@ -497,36 +469,17 @@ function separateColors() {
     const positions = particleSystem.geometry.attributes.position.array;
     const velocities = particleSystem.geometry.attributes.velocity.array;
 
-    const separationVelocity = 3.5;  // Adjust the separation speed
+    const separationVelocity = 1.5;
 
-    // Move red particles to the right
-    for (let i = 0; i < particleCount / 6; i++) {
-        velocities[i * 3] += separationVelocity;  // Move along X-axis
+    // Apply separation to particles
+    for (let i = 0; i < particleCount / 3; i++) {
+        velocities[i * 3] += separationVelocity;
     }
-
-    // Move blue particles to the left
-    for (let i = particleCount / 6; i < (2 * particleCount) / 6; i++) {
-        velocities[i * 3] -= separationVelocity;  // Move along X-axis
+    for (let i = particleCount / 3; i < (2 * particleCount) / 3; i++) {
+        velocities[i * 3] -= separationVelocity;
     }
-
-    // Move green particles up
-    for (let i = (2 * particleCount) / 6; i < (3 * particleCount) / 6; i++) {
-        velocities[i * 3 + 1] += separationVelocity;  // Move along Y-axis
-    }
-
-    // Move yellow particles down
-    for (let i = (3 * particleCount) / 6; i < (4 * particleCount) / 6; i++) {
-        velocities[i * 3 + 1] -= separationVelocity;  // Move along Y-axis
-    }
-
-    // Move purple particles forward
-    for (let i = (4 * particleCount) / 6; i < (5 * particleCount) / 6; i++) { // default 4 / 6; (5
-        velocities[i * 3 + 2] += separationVelocity;  // Move along Z-axis  // Move along Z-axis // default i*3+2
-    }
-
-    // Move cyan particles backward
-    for (let i = (5 * particleCount) / 6; i < particleCount; i++) { // default 5 / 6;
-        velocities[i * 3 + 2] -= separationVelocity;  // Move along Z-axis // default i*3+2
+    for (let i = (2 * particleCount) / 3; i < particleCount; i++) {
+        velocities[i * 3 + 1] -= separationVelocity;
     }
 
     particleSystem.geometry.attributes.position.needsUpdate = true;
@@ -613,7 +566,7 @@ function render() {
 
                 const distanceSquared = dx * dx + dy * dy + dz * dz;
                 const distance = Math.sqrt(distanceSquared);
-                const force = 100000 / (distanceSquared + 10000000);
+                const force = 100 / (distanceSquared + 100);
 
                 ax += force * dx / distance;
                 ay += force * dy / distance;
@@ -622,11 +575,11 @@ function render() {
 
             velocities[i] += ax;
             velocities[i + 1] += ay;
-            velocities[i + 2] += az; //  default = 2
+            velocities[i + 2] += az;
 
             positions[i] += velocities[i];
             positions[i + 1] += velocities[i + 1];
-            positions[i + 2] += velocities[i + 2]; //  default = 2
+            positions[i + 2] += velocities[i + 2];
 
             if (selectedBehavior === "particlesBetweenBlackHoles") {
                 if (positions[i] < blackHoles[0].position.x) {
@@ -690,13 +643,36 @@ function onMouseUp() {
     draggedBlackHole = null;
 }
 
+// Capture the current particle positions
+function captureParticles() {
+    if (!particleSystem) return;
+
+    const positions = particleSystem.geometry.attributes.position.array;
+    capturedPositions = new Float32Array(positions.length);
+    for (let i = 0; i < positions.length; i++) {
+        capturedPositions[i] = positions[i];  // Store the current position of each particle
+    }
+}
+
+// Restore the captured particle positions
+function repeatParticles() {
+    if (!particleSystem || !capturedPositions) return;
+
+    const positions = particleSystem.geometry.attributes.position.array;
+    for (let i = 0; i < positions.length; i++) {
+        positions[i] = capturedPositions[i];  // Restore the saved positions
+    }
+
+    particleSystem.geometry.attributes.position.needsUpdate = true;  // Inform Three.js of the position update
+}
+
 function startTimer() {
     startTime = Date.now();
 
     timerInterval = setInterval(() => {
         const elapsed = Date.now() - startTime;
         const seconds = (elapsed / 1000).toFixed(3);
-        document.getElementById('timer').textContent = `__________________________timer: ${seconds}s`;
+        document.getElementById('timer').textContent = `_________________timer____________: ${seconds}s`;
 
         if (selectedOption === 'Value3' && selectedBehavior === 'particlesBetweenBlackHoles' && particleCount === 99999 && seconds > 7) {
             if (blackHoles.length > 0) {
