@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Sematrica Jap.</title>
+
+    <style>
+    body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: black; /* Change text color to black */
+            background-color: white; /* Set background color to white */
+    }
+
+    #dateTime, #planetDateTime, #timer {
+        position: absolute;
+        left: 10px;
+        font-size: 10px;
+        color: white;
+        z-index: 10;
+    }
+
+    #dateTime {
+        top: 10px;
+    }
+
+    #planetDateTime {
+        top: 50px;
+    }
+
+    #timer {
+        top: 400px;
+    }
+
+    #dropdown, #behaviorDropdown, .input-field {
+        background-color: black;
+        color: white;
+        border: 1px solid white;
+    }
+
+    #dropdown, #behaviorDropdown {
+        position: absolute;
+        top: 100px;
+        left: 10px;
+        z-index: 10;
+    }
+
+    #behaviorDropdown {
+        top: 140px;
+    }
+
+    .input-field {
+        position: absolute;
+        left: 10px;
+        font-size: 12px;
+        z-index: 10;
+    }
+
+    #particleCountInput {
+        top: 180px;
+    }
+
+    #colorInputRed {
+        top: 220px;
+    }
+
+    #colorInputBlue {
+        top: 260px;
+    }
+
+    #colorInputGreen {
+        top: 300px;
+    }
+
+    #colorInputYellow {
+        top: 340px;
+    }
+
+    #colorInputPurple {
+        top: 380px;
+    }
+
+    #colorInputCyan {
+        top: 420px;
+    }
+
+    #compileButton, #pyramidButton, #separateColorsButton {
+        position: absolute;
+        left: 10px;
+        z-index: 10;
+        font-size: 7px;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    #compileButton {
+        top: 460px;
+    }
+
+    #pyramidButton {
+        top: 520px;
+    }
+
+    #separateColorsButton {
+        top: 580px;
+    }
+
+    #errorMessage {
+        position: absolute;
+        top: 640px;
+        left: 10px;
+        color: red;
+        font-size: 16px;
+        z-index: 10;
+    }
+
+    /* Pulse animation */
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+
+</head>
+<body>
+
+<!-- Divs for displaying current date, planet date, and timer -->
+<div id="dateTime"></div>
+<div id="planetDateTime"></div>
+<div id="timer">____________________________________________exeコードの実行 _ : 0.000s</div>
+
+<!-- Dropdown menu for selecting system options -->
+<select id="dropdown">
+    <option value="">Select Event</option> <!-- Default option -->
+    <option value="Value1">事象の地平線 I</option>
+    <option value="Value2">事象の地平線 II</option>
+    <option value="Value3">事象の地平線 III</option>
+    <option value="Value4">事象の地平線 IV</option>
+</select>
+
+<!-- Dropdown menu for particle behavior -->
+<select id="behaviorDropdown">
+    <option value="default">外側へ</option>
+    <option value="particlesBetweenBlackHoles">内側へ</option>
+</select>
+
+<!-- Input fields for number of particles and particle colors -->
+<input id="particleCountInput" class="input-field" type="number" placeholder="Enter number of particles" value="1000000">
+<input id="colorInputRed" class="input-field" type="color" value="#FF0000" title="Select Red Particle Color">
+<input id="colorInputBlue" class="input-field" type="color" value="#0000FF" title="Select Blue Particle Color">
+<input id="colorInputGreen" class="input-field" type="color" value="#00FF00" title="Select Green Particle Color">
+<input id="colorInputYellow" class="input-field" type="color" value="#FFFF00" title="Select Yellow Particle Color">
+<input id="colorInputPurple" class="input-field" type="color" value="#800080" title="Select Purple Particle Color">
+<input id="colorInputCyan" class="input-field" type="color" value="#00FFFF" title="Select Cyan Particle Color">
+
+<!-- Compile button -->
+<button id="compileButton">コンパイル  F-1</button>
+<!-- Pyramid button -->
+<button id="pyramidButton">フラットライン F-0</button>
+<!-- Separate Colors button -->
+<button id="separateColorsButton">Sep-Co</button>
+
+<!-- Error message placeholder -->
+<div id="errorMessage"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+<script>
+const t = THREE;
+let camera, scene, renderer, world, gridHelper, particleSystem, raycaster, mouse;
+let blackHoles = [];
+let particlesData = [];
+let particleCount = 1000000;
+let particleColors = [];
+let blackHoleSize = 50;
+let selectedOption = "";
+let selectedBehavior = "default";
+let particleColorRed = "#FF0000";
+let particleColorBlue = "#0000FF";
+let particleColorGreen = "#00FF00";
+let particleColorYellow = "#FFFF00";
+let particleColorPurple = "#800080";
+let particleColorCyan = "#00FFFF";
+
+let pixR = window.devicePixelRatio ? window.devicePixelRatio : 1;
+let isDragging = false;
+let draggedBlackHole = null;
+let mouseStart = { x: 0, y: 0 };
+
+let timerInterval;
+let startTime;
+let pyramidButtonClickCount = 0;
+
+function updateESTDateTime() {
+    const estTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
+    document.getElementById('dateTime').textContent = `東部標準時 : ${estTime}`;
+}
+
+function init() {
+    setupScene();
+    resize();
+    render();
+
+    setInterval(updateESTDateTime, 1000);
+    window.addEventListener('resize', resize);
+
+    document.getElementById('compileButton').addEventListener('click', handleCompile);
+    document.getElementById('pyramidButton').addEventListener('click', createPyramid);
+    document.getElementById('separateColorsButton').addEventListener('click', separateColors);
+
+    document.getElementById('dropdown').addEventListener('change', toggleBehaviorDropdown);
+    document.addEventListener('mousedown', onMouseDown, false);
+    document.addEventListener('mousemove', onMouseMove, false);
+    document.addEventListener('mouseup', onMouseUp, false);
+
+    raycaster = new t.Raycaster();
+    mouse = new t.Vector2();
+}
+
+function setupScene() {
+    camera = new t.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+    camera.position.z = 800;
+
+    scene = new t.Scene();
+
+
+    renderer = new t.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(pixR);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    world = new t.Object3D();
+    scene.add(world);
+
+    createGrid();
+}
+
+function createLogInButton() {
+    // Remove existing button if present
+    let existingButton = document.getElementById('logInButton');
+    if (existingButton) {
+        existingButton.remove();
+    }
+
+    // Create new login button
+    let logInButton = document.createElement('button');
+    logInButton.id = 'logInButton';
+    logInButton.textContent = 'て';
+
+    // Style the button to be perfectly round
+    logInButton.style.position = 'absolute';
+    logInButton.style.zIndex = '1';
+    logInButton.style.width = '30px'; // Equal width and height
+    logInButton.style.height = '30px'; // Equal width and height
+    logInButton.style.borderRadius = '50%'; // Make it a perfect circle
+    logInButton.style.backgroundColor = 'black'; // Background color
+    logInButton.style.color = 'black'; // Text color
+    logInButton.style.fontSize = '10px'; // Font size
+    logInButton.style.border = 'none'; // Remove border
+    logInButton.style.cursor = 'pointer'; // Pointer on hover
+    logInButton.style.boxShadow = '0 8px 16px rgba(255, 75, 92, 0.5)'; // Shadow
+
+    // Glow effect
+    logInButton.style.boxShadow = '0 0 20px rgba(255, 75, 92, 0.8), 0 0 30px rgba(255, 75, 92, 0.4)';
+
+    // Pulse animation
+    logInButton.style.animation = 'pulse 3s infinite';
+
+    // Add hover effects for scaling and color change
+    logInButton.addEventListener('mouseover', () => {
+        logInButton.style.transform = 'scale(1.1)';
+        logInButton.style.backgroundColor = '#ff4b5c'; // Background color on hover
+    });
+    logInButton.addEventListener('mouseout', () => {
+        logInButton.style.transform = 'scale(1)';
+        logInButton.style.backgroundColor = 'black'; // Restore original background
+    });
+
+    // Append button to the body
+    document.body.appendChild(logInButton);
+
+    // Position the button in the middle of the screen
+    logInButton.style.left = `${window.innerWidth / 2 - 50}px`;
+    logInButton.style.top = `${window.innerHeight / 2 - 50}px`;
+
+    // Action when button is clicked
+    logInButton.addEventListener('click', () => {
+        moveParticlesToButton(logInButton);
+    });
+}
+
+function moveParticlesToButton(logInButton) {
+    const rect = logInButton.getBoundingClientRect();
+    const targetPosition = new t.Vector3(
+        (rect.left + rect.width / 2) / window.innerWidth * 2 - 1,
+        -(rect.top + rect.height / 2) / window.innerHeight * 2 + 1,
+        0
+    );
+    targetPosition.unproject(camera);
+
+    const positions = particleSystem.geometry.attributes.position.array;
+    const velocities = particleSystem.geometry.attributes.velocity.array;
+
+    for (let i = 0; i < positions.length; i += 3) {
+        const dx = targetPosition.x - positions[i];
+        const dy = targetPosition.y - positions[i + 1];
+        const dz = targetPosition.z - positions[i + 2];
+        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+        // Move particles toward the button
+        velocities[i] = dx / distance * 0.1;
+        velocities[i + 1] = dy / distance * 0.1;
+        velocities[i + 2] = dz / distance * 0.1;
+    }
+
+    particleSystem.geometry.attributes.velocity.needsUpdate = true;
+}
+
+function handleCompile() {
+    const errorMessageDiv = document.getElementById('errorMessage');
+    errorMessageDiv.textContent = "";
+
+    selectedOption = document.getElementById('dropdown').value;
+    errorMessageDiv.style.color = particleColorRed;
+
+    if (!selectedOption) {
+        errorMessageDiv.textContent = "Error: Please select an event before compiling.";
+        return;
+    }
+
+    resetTimer();
+    startTimer();
+
+    selectedBehavior = document.getElementById('behaviorDropdown').value;
+    particleCount = parseInt(document.getElementById('particleCountInput').value) || 1000000;
+    particleColorRed = document.getElementById('colorInputRed').value;
+    particleColorBlue = document.getElementById('colorInputBlue').value;
+    particleColorGreen = document.getElementById('colorInputGreen').value;
+    particleColorYellow = document.getElementById('colorInputYellow').value;
+    particleColorPurple = document.getElementById('colorInputPurple').value;
+    particleColorCyan = document.getElementById('colorInputCyan').value;
+
+    clearWorld();
+
+    if (selectedOption === 'Value1') {
+        createBlackHoleSystem(1);
+    } else if (selectedOption === 'Value2') {
+        createBlackHoleSystem(3);
+    } else if (selectedOption === 'Value3') {
+        createBlackHoleSystem(4);
+    } else if (selectedOption === 'Value4') {
+        createBlackHoleSystem(2);
+    }
+
+    createParticlesAroundBlackHoles();
+
+    // Create login button if certain conditions are met
+        if (selectedOption === 'Value3' && selectedBehavior === 'particlesBetweenBlackHoles' && particleCount === 99999 && seconds > 7) {
+        createLogInButton();
+         positionLogInButton(blackHoles[0]);
+    }
+}
+
+function toggleBehaviorDropdown() {
+    const dropdown = document.getElementById('dropdown');
+    const behaviorDropdown = document.getElementById('behaviorDropdown');
+
+    if (dropdown.value === 'Value1') {
+        behaviorDropdown.value = "default";
+        behaviorDropdown.disabled = true;
+    } else {
+        behaviorDropdown.disabled = false;
+    }
+}
+
+function createGrid() {
+    const darkGreyColor = new t.Color(0x2f2f2f); // Dark grey color
+
+    const gridMaterial = new t.LineBasicMaterial({
+        color: darkGreyColor,
+        linewidth: 2,
+        opacity: 0.8,
+        transparent: true
+    });
+
+    gridHelper = new t.GridHelper(2000, 50);
+    gridHelper.material = gridMaterial;
+
+    gridHelper.position.set(0, -100, 0);
+    scene.add(gridHelper);
+}
+
+function clearWorld() {
+    while (world.children.length > 0) {
+        world.remove(world.children[0]);
+    }
+    particlesData = [];
+    particleColors = [];
+    blackHoles = [];
+    particleSystem = null;
+}
+
+function createBlackHoleSystem(numBlackHoles) {
+    const positions = [-200, 200];
+    for (let i = 0; i < numBlackHoles; i++) {
+        const blackHole = new t.Mesh(
+            new t.SphereGeometry(blackHoleSize, 32, 32),
+            new t.MeshBasicMaterial({ color: 0x000000 })
+        );
+        blackHole.position.set(positions[i % positions.length], 0, 0);
+        world.add(blackHole);
+        blackHoles.push(blackHole);
+    }
+}
+
+function createParticlesAroundBlackHoles() {
+    const particles = new t.BufferGeometry();
+    const particlePositions = new Float32Array(particleCount * 3);
+    const particleVelocities = new Float32Array(particleCount * 3);
+    particleColors = new Float32Array(particleCount * 3);
+
+    const [rRed, gRed, bRed] = hexToRgb(particleColorRed);
+    const [rBlue, gBlue, bBlue] = hexToRgb(particleColorBlue);
+    const [rGreen, gGreen, bGreen] = hexToRgb(particleColorGreen);
+    const [rYellow, gYellow, bYellow] = hexToRgb(particleColorYellow);
+    const [rPurple, gPurple, bPurple] = hexToRgb(particleColorPurple);
+    const [rCyan, gCyan, bCyan] = hexToRgb(particleColorCyan);
+
+    for (let i = 0; i < particleCount; i++) {
+        const x = Math.random() * 600 - 300;
+        const y = (Math.random() - 0.5) * 300;
+        const z = (Math.random() - 0.5) * 300;
+
+        particlePositions[i * 3] = x;
+        particlePositions[i * 3 + 1] = y;
+        particlePositions[i * 3 + 2] = z;
+
+        particleVelocities[i * 3] = 0;
+        particleVelocities[i * 3 + 1] = 0;
+        particleVelocities[i * 3 + 2] = 0;
+
+        if (i < particleCount / 6) {
+            particleColors[i * 3] = rRed / 255;
+            particleColors[i * 3 + 1] = gRed / 255;
+            particleColors[i * 3 + 2] = bRed / 255;
+        } else if (i < (2 * particleCount) / 6) {
+            particleColors[i * 3] = rBlue / 255;
+            particleColors[i * 3 + 1] = gBlue / 255;
+            particleColors[i * 3 + 2] = bBlue / 255;
+        } else if (i < (3 * particleCount) / 6) {
+            particleColors[i * 3] = rGreen / 255;
+            particleColors[i * 3 + 1] = gGreen / 255;
+            particleColors[i * 3 + 2] = bGreen / 255;
+        } else if (i < (4 * particleCount) / 6) {
+            particleColors[i * 3] = rYellow / 255;
+            particleColors[i * 3 + 1] = gYellow / 255;
+            particleColors[i * 3 + 2] = bYellow / 255;
+        } else if (i < (5 * particleCount) / 6) {
+            particleColors[i * 3] = rPurple / 255;
+            particleColors[i * 3 + 1] = gPurple / 255;
+            particleColors[i * 3 + 2] = bPurple / 255;
+        } else {
+            particleColors[i * 3] = rCyan / 255;
+            particleColors[i * 3 + 1] = gCyan / 255;
+            particleColors[i * 3 + 2] = bCyan / 255;
+        }
+    }
+
+        const particleMaterial = new t.PointsMaterial({
+    size: 0.0001,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.25,
+    blending: t.AdditiveBlending,
+    sizeAttenuation: false
+});
+
+    particles.setAttribute('position', new t.Float32BufferAttribute(particlePositions, 3));
+    particles.setAttribute('velocity', new t.Float32BufferAttribute(particleVelocities, 3));
+    particles.setAttribute('color', new t.Float32BufferAttribute(particleColors, 3));
+
+    particleSystem = new t.Points(particles, particleMaterial);
+    world.add(particleSystem);
+}
+
+function separateColors() {
+    if (!particleSystem) return;
+
+    const positions = particleSystem.geometry.attributes.position.array;
+    const velocities = particleSystem.geometry.attributes.velocity.array;
+
+    const separationVelocity = 3.5;  // Adjust the separation speed
+
+    // Move red particles to the right
+    for (let i = 0; i < particleCount / 6; i++) {
+        velocities[i * 3] += separationVelocity;  // Move along X-axis
+    }
+
+    // Move blue particles to the left
+    for (let i = particleCount / 6; i < (2 * particleCount) / 6; i++) {
+        velocities[i * 3] -= separationVelocity;  // Move along X-axis
+    }
+
+    // Move green particles up
+    for (let i = (2 * particleCount) / 6; i < (3 * particleCount) / 6; i++) {
+        velocities[i * 3 + 1] += separationVelocity;  // Move along Y-axis
+    }
+
+    // Move yellow particles down
+    for (let i = (3 * particleCount) / 6; i < (4 * particleCount) / 6; i++) {
+        velocities[i * 3 + 1] -= separationVelocity;  // Move along Y-axis
+    }
+
+    // Move purple particles forward
+    for (let i = (4 * particleCount) / 6; i < (5 * particleCount) / 6; i++) { // default 4 / 6; (5
+        velocities[i * 3 + 2] += separationVelocity;  // Move along Z-axis  // Move along Z-axis // default i*3+2
+    }
+
+    // Move cyan particles backward
+    for (let i = (5 * particleCount) / 6; i < particleCount; i++) { // default 5 / 6;
+        velocities[i * 3 + 2] -= separationVelocity;  // Move along Z-axis // default i*3+2
+    }
+
+    particleSystem.geometry.attributes.position.needsUpdate = true;
+    particleSystem.geometry.attributes.velocity.needsUpdate = true;
+}
+
+function createPyramid() {
+    if (!particleSystem) return;
+
+    pyramidButtonClickCount++;
+
+    if (pyramidButtonClickCount === 7) {
+        rotateGrid();
+        pyramidButtonClickCount = 0;
+    }
+
+    const positions = particleSystem.geometry.attributes.position.array;
+    const baseLayerSize = Math.floor(Math.sqrt(particleCount));
+    const layerHeight = 10;
+    let index = 0;
+
+    let currentLayerSize = baseLayerSize;
+    let yOffset = 0;
+
+    for (let layer = 0; layer < baseLayerSize; layer++) {
+        const layerSize = currentLayerSize;
+        const xOffset = layerSize * 5;
+        const zOffset = layerSize * 5;
+
+        for (let row = 0; row < layerSize; row++) {
+            for (let col = 0; col < layerSize; col++) {
+                if (index >= particleCount) break;
+
+                const x = col * 10 - xOffset / 2;
+                const y = yOffset;
+                const z = row * 10 - zOffset / 2;
+
+                positions[index * 3] = x;
+                positions[index * 3 + 1] = y;
+                positions[index * 3 + 2] = z;
+
+                index++;
+            }
+        }
+
+        currentLayerSize--;
+        yOffset += layerHeight;
+    }
+
+    particleSystem.geometry.attributes.position.needsUpdate = true;
+}
+
+function rotateGrid() {
+    gridHelper.rotation.y += 0.001;
+}
+
+function hexToRgb(hex) {
+    const bigint = parseInt(hex.replace('#', ''), 16);
+    return [
+        (bigint >> 16) & 255,
+        (bigint >> 8) & 255,
+        bigint & 255
+    ];
+}
+
+function render() {
+    rotateGrid();
+
+    if (particleSystem) {
+        const positions = particleSystem.geometry.attributes.position.array;
+        const velocities = particleSystem.geometry.attributes.velocity.array;
+
+        for (let i = 0; i < positions.length; i += 3) {
+            let x = positions[i];
+            let y = positions[i + 1];
+            let z = positions[i + 2];
+
+            let ax = 0, ay = 0, az = 0;
+
+            blackHoles.forEach((blackHole, index) => {
+                const dx = blackHole.position.x - x;
+                const dy = blackHole.position.y - y;
+                const dz = blackHole.position.z - z;
+
+                const distanceSquared = dx * dx + dy * dy + dz * dz;
+                const distance = Math.sqrt(distanceSquared);
+                const force = 100000 / (distanceSquared + 10000000);
+
+                ax += force * dx / distance;
+                ay += force * dy / distance;
+                az += force * dz / distance;
+            });
+
+            velocities[i] += ax;
+            velocities[i + 1] += ay;
+            velocities[i + 2] += az; //  default = 2
+
+            positions[i] += velocities[i];
+            positions[i + 1] += velocities[i + 1];
+            positions[i + 2] += velocities[i + 2]; //  default = 2
+
+            if (selectedBehavior === "particlesBetweenBlackHoles") {
+                if (positions[i] < blackHoles[0].position.x) {
+                    positions[i] = blackHoles[1].position.x;
+                }
+            }
+        }
+
+        particleSystem.geometry.attributes.position.needsUpdate = true;
+    }
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+}
+
+function resize() {
+    const width = window.innerWidth, height = window.innerHeight;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+}
+
+function onMouseDown(event) {
+    if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'BUTTON') {
+        return;
+    }
+
+    event.preventDefault();
+
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(blackHoles);
+
+    if (intersects.length > 0) {
+        draggedBlackHole = intersects[0].object;
+        isDragging = true;
+        mouseStart.x = event.clientX;
+        mouseStart.y = event.clientY;
+    }
+}
+
+function onMouseMove(event) {
+    if (!isDragging) return;
+
+    const deltaX = (event.clientX - mouseStart.x) * 0.1;
+    const deltaY = (event.clientY - mouseStart.y) * 0.1;
+
+    if (draggedBlackHole) {
+        draggedBlackHole.position.x += deltaX;
+        draggedBlackHole.position.y -= deltaY;
+    }
+
+    mouseStart.x = event.clientX;
+    mouseStart.y = event.clientY;
+}
+
+function onMouseUp() {
+    isDragging = false;
+    draggedBlackHole = null;
+}
+
+function startTimer() {
+    startTime = Date.now();
+
+    timerInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const seconds = (elapsed / 1000).toFixed(3);
+        document.getElementById('timer').textContent = `__________________________timer: ${seconds}s`;
+
+        if (selectedOption === 'Value3' && selectedBehavior === 'particlesBetweenBlackHoles' && particleCount === 99999 && seconds > 7) {
+            if (blackHoles.length > 0) {
+                createLogInButton();
+                positionLogInButton(blackHoles[0]);
+            }
+        }
+    }, 50);
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    document.getElementById('timer').textContent = "timer: 0.000s";
+}
+
+window.onload = init;
+</script>
+
+</body>
+</html>
